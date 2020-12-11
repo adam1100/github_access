@@ -1,7 +1,7 @@
 import React from 'react';
 require('dotenv').config()
 
-const token = 'yourapikey'
+const token = 'Your API token here'
 const headers = {
     "Authorization" : "Token " + token
 };
@@ -14,71 +14,79 @@ class App extends React.Component {
             repos: [],
             commits: [],
             isLoaded: false,
-            user: 'adam1100',
+            user: 'phadej',
             commitData: [],
-            commitDataLoaded: false
+            commitDataLoaded: false,
+            contributors: []
         }
     }
-
+    
     async componentDidMount() {
+        var repos3 = await this.pageRequest
+        (`https://api.github.com/users/${this.state.user}/repos?&per_page=100&page=`);
+        this.setState({
+            repos: repos3,
+        }) 
 
-         await fetch(`https://api.github.com/users/${this.state.user}/repos`, {
-            method: 'GET',
-            headers: headers,
-          })
-            .then(res => res.json())
-            .then(json => {
-                this.setState({
-                    repos: json,
-                })
-            }).catch((err) => {
-                console.log(err);
-            });
-        
-         await fetch(`https://api.github.com/repos/${this.state.user}/inventory-tracker2/commits`, {
-            method: 'GET',
-            headers: headers,
-          })
-            .then(res => res.json())
-            .then(json => {
-                this.setState({
-                    commits: json,
-                })
-            }).catch((err) => {
-                console.log(err);
-            });
-
-            const repos = this.state.repos;
-            var commitData = [];
-            var numCommits;
-
-      for(var i = 0; i < repos.length; i++) {
+        const repos = this.state.repos;
+        var commitData = [];
+        var numCommits;
+        var numContributors;
+        console.log(repos.length)
+       
+        for(var i = 0; i < repos.length; i++) {
         var repoName = repos[i].name;
         console.log(repoName);
 
-         await fetch(`https://api.github.com/repos/${this.state.user}/${repoName}/commits`)
-        .then(response => {
-            return response.json()
-        }).then(json => {
-            numCommits = json.length;
-        })
-        .catch((error) => console.error(error));
-    
-        var data = { repoName: repoName, commits: numCommits };
+   
+        var commitArray = await this.pageRequest
+        (`https://api.github.com/repos/${this.state.user}/${repoName}/commits?&per_page=100&page=`);
+
+
+        var contributorsArray  = await this.pageRequest
+        (`https://api.github.com/repos/${this.state.user}/${repoName}/contributors?&per_page=100&page=`);
+
+        
+        var data = { repoName: repoName, commits: commitArray.length, contributors: contributorsArray.length };
         commitData.push(data);
     }
-        console.log(commitData[0])
-        console.log(commitData[1])
-        console.log(commitData[2])
-        console.log(commitData[3])
-        console.log(commitData[4])
-    
+
         this.setState({
             isLoaded: true,
             commitData: commitData,
         })
     }
+    async pageRequest(url){
+        const baseUrl = url;
+        var size;
+        let finished = false;
+        let page = 1;
+        let repos1 = [];
+        let lastResult = [];
+        do {
+          try {
+            const resp = await fetch(`${baseUrl}${page}`, {
+                method: 'GET',
+                headers: headers,
+              });
 
+            const data = await resp.json();
+            lastResult = data;
+            repos1.push(data);
+            size = lastResult.length;
+            page++;
+
+          } catch (err) {
+            console.error(`Oeps, sometshing is wrong ${err}`);
+          }
+          if(size < 100){
+              finished = true;
+          }
+        } while (!finished );
+        var repos2 = [].concat.apply([], repos1);
+        return repos2;
+    }
+    
     render() {
  
         const { isLoaded, repos, commits, commitData } = this.state;
@@ -88,12 +96,13 @@ class App extends React.Component {
         return (
             <div className="App">
                 <ul>
-                  Number of commits:{commits.length} <br />
+
                   Number of repos:{repos.length} <br />
                     {commitData.map(commitData => (
                         <li key={commitData.repoName}>
                             Name: {commitData.repoName} <br />
-                            Commits: {commitData.commits}
+                            Commits: {commitData.commits} <br />
+                            Contributors: {commitData.contributors}
                    
                         </li>
                     ))}
