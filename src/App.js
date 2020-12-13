@@ -1,7 +1,8 @@
 import React from 'react';
+import Form from "./components/Form";
 require('dotenv').config()
 
-const token = 'Your API token here'
+const token = 'eef5569b5abc9914da931c8fe5919651f93c372d'
 const headers = {
     "Authorization" : "Token " + token
 };
@@ -14,14 +15,21 @@ class App extends React.Component {
             repos: [],
             commits: [],
             isLoaded: false,
-            user: 'phadej',
+            user: '',
             commitData: [],
             commitDataLoaded: false,
             contributors: []
         }
     }
-    
-    async componentDidMount() {
+
+    getUser = async (e) => {
+        e.preventDefault();
+        const username = e.target.elements.userName.value;
+        await this.setState({
+            user: username,
+        }) 
+        console.log("State user: ", this.state.user);
+        e.preventDefault();
         var repos3 = await this.pageRequest
         (`https://api.github.com/users/${this.state.user}/repos?&per_page=100&page=`);
         this.setState({
@@ -42,11 +50,9 @@ class App extends React.Component {
         var commitArray = await this.pageRequest
         (`https://api.github.com/repos/${this.state.user}/${repoName}/commits?&per_page=100&page=`);
 
-
         var contributorsArray  = await this.pageRequest
         (`https://api.github.com/repos/${this.state.user}/${repoName}/contributors?&per_page=100&page=`);
 
-        
         var data = { repoName: repoName, commits: commitArray.length, contributors: contributorsArray.length };
         commitData.push(data);
     }
@@ -55,7 +61,8 @@ class App extends React.Component {
             isLoaded: true,
             commitData: commitData,
         })
-    }
+      }
+
     async pageRequest(url){
         const baseUrl = url;
         var size;
@@ -88,15 +95,14 @@ class App extends React.Component {
     }
     
     render() {
- 
         const { isLoaded, repos, commits, commitData } = this.state;
-        if (!isLoaded)
-            return <div>Loading...</div>;
-
+       
         return (
-            <div className="App">
+            <div className="App"> 
+            <Form getUser={this.getUser} />
+            {!isLoaded ? <div>Loading...</div> : <div> 
                 <ul>
-
+                  User: {this.state.user} <br />
                   Number of repos:{repos.length} <br />
                     {commitData.map(commitData => (
                         <li key={commitData.repoName}>
@@ -109,6 +115,9 @@ class App extends React.Component {
                 </ul>
                 <br />
             </div>
+            }
+            </div>
+
         );
 
     }
