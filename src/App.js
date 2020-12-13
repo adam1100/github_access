@@ -2,7 +2,7 @@ import React from 'react';
 import Form from "./components/Form";
 require('dotenv').config()
 
-const token = 'eef5569b5abc9914da931c8fe5919651f93c372d'
+const token = 'Your Access token'
 const headers = {
     "Authorization" : "Token " + token
 };
