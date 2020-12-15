@@ -1,8 +1,10 @@
 import React from 'react';
 import Form from "./components/Form";
+import Graph from "./components/Graph";
+
 require('dotenv').config()
 
-const token = 'Your Access token'
+const token = 'Your API token'
 const headers = {
     "Authorization" : "Token " + token
 };
@@ -38,8 +40,6 @@ class App extends React.Component {
 
         const repos = this.state.repos;
         var commitData = [];
-        var numCommits;
-        var numContributors;
         console.log(repos.length)
        
         for(var i = 0; i < repos.length; i++) {
@@ -96,12 +96,13 @@ class App extends React.Component {
     
     render() {
         const { isLoaded, repos, commits, commitData } = this.state;
-       
+      
         return (
             <div className="App"> 
             <Form getUser={this.getUser} />
-            {!isLoaded ? <div>Loading...</div> : <div> 
-                <ul>
+            {!isLoaded ? <div> Enter Github user </div>: <div> 
+                <Graph data={commitData} />
+                {/* <ul>
                   User: {this.state.user} <br />
                   Number of repos:{repos.length} <br />
                     {commitData.map(commitData => (
@@ -112,10 +113,10 @@ class App extends React.Component {
                    
                         </li>
                     ))}
-                </ul>
+                </ul> */}
                 <br />
             </div>
-            }
+            } 
             </div>
 
         );
