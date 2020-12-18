@@ -13,7 +13,7 @@ function YAxis({ yScale, width }) {
         x2={width}
       />
       <text
-        style={{ fontSize: 12 }}
+        style={{ fontSize: 14 }}
         x={textPadding}
         dy=".32em"
         y={yScale(d)}

@@ -2,7 +2,6 @@ import React from "react";
 
 function XAxis({ xScale, height }) {
   const textPadding = 10;
-
   const axis = xScale.ticks(10).map((d, i) => (
     <g className="x-tick" key={i}>
       <line
@@ -13,7 +12,7 @@ function XAxis({ xScale, height }) {
         x2={xScale(d)}
       />
       <text
-        style={{ textAnchor: "middle", fontSize: 12 }}
+        style={{ textAnchor: "middle", fontSize: 14 }}
         dy=".71em"
         x={xScale(d)}
         y={height + textPadding}

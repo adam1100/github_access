@@ -1,10 +1,11 @@
 import React from 'react';
 import Form from "./components/Form";
 import Graph from "./components/Graph";
+import './App.css';
 
 require('dotenv').config()
 
-const token = 'Your API token'
+const token = 'API Token'
 const headers = {
     "Authorization" : "Token " + token
 };
@@ -99,24 +100,17 @@ class App extends React.Component {
       
         return (
             <div className="App"> 
+            <div className="searchBar"> 
             <Form getUser={this.getUser} />
-            {!isLoaded ? <div> Enter Github user </div>: <div> 
+            </div> 
+            {!isLoaded ? <div> Enter Github user </div>: 
+            <div> 
                 <Graph data={commitData} />
-                {/* <ul>
-                  User: {this.state.user} <br />
-                  Number of repos:{repos.length} <br />
-                    {commitData.map(commitData => (
-                        <li key={commitData.repoName}>
-                            Name: {commitData.repoName} <br />
-                            Commits: {commitData.commits} <br />
-                            Contributors: {commitData.contributors}
-                   
-                        </li>
-                    ))}
-                </ul> */}
+   
                 <br />
             </div>
             } 
+         
             </div>
 
         );
