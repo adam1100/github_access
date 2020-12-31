@@ -6,7 +6,6 @@ import XAxis from "./XAxis";
 import YAxis from "./YAxis";
 
 const Graph = (props) => {
-  console.log(props.data);
   const data = props.data,
     w = 1200,
     h = 800,
@@ -42,17 +41,14 @@ const Graph = (props) => {
           title={"Hi"}
         />
         <text
-          x={xScale(d.commits) + 10}
-          y={yScale(d.contributors) + 10}
-          style={{ fontSize: 10 }}
-
-          dy=".3em"> {d.repoName}
+          x={xScale(d.commits) - Math.floor(Math.random() * 20)}
+          y={yScale(d.contributors) + Math.floor(Math.random() * 20)}
+          style={{ fontSize: 9 }}
+          dy=".2em"> {d.repoName}
         </text>
       </g>
     </svg>
   ));
-
-  const svg1 = d3.selectAll(circles)
 
   return (
     <div>
@@ -68,16 +64,14 @@ const Graph = (props) => {
             y={h / 2}
           >
             Contributors</text>
+          <text>
+            Contributors vs Commits for Github user: {props.user}</text> 
 
           <YAxis yScale={yScale} width={width} />
           <XAxis xScale={xScale} height={height} />
-          {svg1}
-          <div id="my_dataviz"> </div>
+          {circles}
         </g>
       </svg>
-      {/* {circles} */}
-      {/*       <div className = "XAxis">Commits</div>
-      <div className = "YAxis">Contributors</div> */}
     </div>
 
   );

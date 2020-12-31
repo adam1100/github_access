@@ -29,7 +29,6 @@ class App extends React.Component {
             token: apiKey,
         })
 
-        console.log("State user: ", this.state.user);
         e.preventDefault();
         var repos3 = await this.pageRequest
             (`https://api.github.com/users/${this.state.user}/repos?&per_page=100&page=`);
@@ -39,12 +38,9 @@ class App extends React.Component {
         
         const repos = this.state.repos;
         var commitData = [];
-        console.log(repos.length)
 
         for (var i = 0; i < repos.length; i++) {
             var repoName = repos[i].name;
-            console.log(repoName);
-
 
             var commitArray = await this.pageRequest
                 (`https://api.github.com/repos/${this.state.user}/${repoName}/commits?&per_page=100&page=`);
@@ -103,7 +99,7 @@ class App extends React.Component {
                 </div>
                 {!isLoaded ? <div> Enter Github user </div> :
                     <div>
-                        <Graph data={commitData} />
+                        <Graph data={commitData} user={this.state.user} />
 
                         <br />
                     </div>
