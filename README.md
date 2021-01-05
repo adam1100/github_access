@@ -17,7 +17,13 @@ In the project directory, you can run:
 
 ### `docker-compose up`
 
-This will start the program on port 3000. To access this, run the command
+This will start the program on port 3000. Head over to the browser and type the following:
+
+### `localhost:3000`
+
+The program should be running.
+
+Alternatively, if it is not running, run the command
 ### `docker-machine ip default`
 to figure out the ip address of the docker machine. Then enter the ip followed by :3000 in the browser. For me, it was the following: 
 
